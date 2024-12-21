@@ -1,7 +1,7 @@
-Scaling [--solutionname--] With Kubernetes
+Scaling [cybersecuritywithprivategpt-3f10] With Kubernetes
 ===========================
 
-Generated On: --datetime-- UTC
+Generated On: 2024-12-21 03:37:24 UTC
 
 You can scale your solution with Kubernetes.  To do so, will will need to apply the following YAML files to your Kubernetes cluster.
 
@@ -35,13 +35,13 @@ You can scale your solution with Kubernetes.  To do so, will will need to apply 
    sudo systemctl restart docker
 
 
-Based on your TML solution [--solutionname--] - if you want to scale your application with Kubernetes - you will need to apply the following YAML files.
+Based on your TML solution [cybersecuritywithprivategpt-3f10] - if you want to scale your application with Kubernetes - you will need to apply the following YAML files.
 
 .. list-table::
 
    * - **YML File**
      - **Description**
-   * - :ref:`--solutionnamefile--`
+   * - :ref:`cybersecuritywithprivategpt-3f10.yml`
      - This is your main solution YAML file.  
  
        It MUST be applied to your Kubernetes cluster.
@@ -75,10 +75,10 @@ Based on your TML solution [--solutionname--] - if you want to scale your applic
        This is OPTIONAL.  However, it must be 
  
        applied if using Step 9 DAG.
-   * - :ref:`nginx-ingress---nginxname--.yml`
+   * - :ref:`nginx-ingress-cybersecuritywithprivategpt-3f10.yml`
      - If you are scaling your TML solution you must
 
-       apply the nginx-ingress--nginxname--.yml; this yaml is 
+       apply the nginx-ingresscybersecuritywithprivategpt-3f10.yml; this yaml is 
 
        auto-generated for every TML solution.
 
@@ -94,13 +94,13 @@ kubectl Apply command
 
 .. code-block:: YAML
 
-   --kubectl--
+   kubectl apply -f kafka.yml -f secrets.yml -f mysql-storage.yml -f mysql-db-deployment.yml -f qdrant.yml -f privategpt.yml -f cybersecuritywithprivategpt-3f10.yml
 
---solutionnamefile--
+cybersecuritywithprivategpt-3f10.yml
 ------------------------
 
 .. important::
-   Copy and Paste this YAML file: --solutionnamefile-- - and save it locally.
+   Copy and Paste this YAML file: cybersecuritywithprivategpt-3f10.yml - and save it locally.
 
 .. attention::
 
@@ -118,8 +118,128 @@ kubectl Apply command
 
 .. code-block:: YAML
 
-   ################# --solutionnamefile--
-   --solutionnamecode--
+   ################# cybersecuritywithprivategpt-3f10.yml
+   
+     apiVersion: apps/v1
+     kind: Deployment
+     metadata:
+       name: cybersecuritywithprivategpt-3f10
+     spec:
+       selector:
+         matchLabels:
+           app: cybersecuritywithprivategpt-3f10
+       replicas: 3 # tells deployment to run 1 pods matching the template
+       template:
+         metadata:
+           labels:
+             app: cybersecuritywithprivategpt-3f10
+         spec:
+           containers:
+           - name: cybersecuritywithprivategpt-3f10
+             image: maadsdocker/cybersecuritywithprivategpt-3f10-amd64:latest
+             volumeMounts:
+             - name: dockerpath
+               mountPath: /var/run/docker.sock
+             ports:
+             - containerPort: 8883
+             - containerPort: 41511
+             - containerPort: 57263
+             - containerPort: 54881
+             env:
+             - name: TSS
+               value: '0'
+             - name: SOLUTIONNAME
+               value: 'cybersecuritywithprivategpt-3f10'
+             - name: SOLUTIONDAG
+               value: 'solution_preprocessing_ai_mqtt_dag-cybersecuritywithprivategpt-3f10'
+             - name: GITUSERNAME
+               value: 'smaurice101'
+             - name: GITREPOURL
+               value: 'https://github.com/smaurice101/raspberrypitss.git'
+             - name: SOLUTIONEXTERNALPORT
+               value: '54881'
+             - name: CHIP
+               value: 'amd64'
+             - name: SOLUTIONAIRFLOWPORT
+               value: '41511'
+             - name: SOLUTIONVIPERVIZPORT
+               value: '57263'
+             - name: DOCKERUSERNAME
+               value: 'maadsdocker'
+             - name: CLIENTPORT
+               value: '8883'
+             - name: EXTERNALPORT
+               value: '39399'
+             - name: KAFKACLOUDUSERNAME
+               value: 'MUHRHBPKJYPROKBX'
+             - name: VIPERVIZPORT
+               value: '49689'
+             - name: MQTTUSERNAME
+               value: 'smaurice'
+             - name: AIRFLOWPORT
+               value: '9000'
+             - name: GITPASSWORD
+               valueFrom:
+                 secretKeyRef:
+                  name: tmlsecrets 
+                  key: githubtoken                       
+             - name: KAFKACLOUDPASSWORD
+               valueFrom:
+                 secretKeyRef:
+                  name: tmlsecrets 
+                  key: kafkacloudpassword                      
+             - name: MQTTPASSWORD
+               valueFrom: 
+                 secretKeyRef:
+                   name: tmlsecrets 
+                   key: mqttpass                        
+             - name: READTHEDOCS
+               valueFrom:
+                 secretKeyRef:
+                   name: tmlsecrets 
+                   key: readthedocs          
+             - name: qip 
+               value: 'privategpt-service' # This is private GPT service in kubernetes
+             - name: KUBE
+               value: '1'
+             - name: step4maxrows # STEP 4 maxrows field can be adjusted here.  Higher the number more data to process, BUT more memory needed.
+               value: '800'
+             - name: step4bmaxrows # STEP 4b maxrows field can be adjusted here.  Higher the number more data to process, BUT more memory needed.
+               value: '-1'               
+             - name: step5rollbackoffsets # STEP 5 rollbackoffsets field can be adjusted here.  Higher the number more training data to process, BUT more memory needed.
+               value: '-1'                              
+             - name: step6maxrows # STEP 6 maxrows field can be adjusted here.  Higher the number more predictions to make, BUT more memory needed.
+               value: '-1'                              
+             - name: step9rollbackoffset # STEP 9 rollbackoffset field can be adjusted here.  Higher the number more information sent to privateGPT, BUT more memory needed.
+               value: '5'                                             
+             - name: step1solutiontitle # STEP 1 solutiontitle field can be adjusted here. 
+               value: 'Real-Time Cybersecurity Packet Monitoring with GenAI'                              
+             - name: step1description # STEP 1 description field can be adjusted here. 
+               value: 'This is an awesome real-time solution built by TSS'                                          
+             - name: KUBEBROKERHOST
+               value: 'kafka-service:9092'         
+             - name: KAFKABROKERHOST
+               value: '127.0.0.1:9092'                              
+           volumes: 
+           - name: dockerpath
+             hostPath:
+               path: /var/run/docker.sock
+   ---
+     apiVersion: v1
+     kind: Service
+     metadata:
+       name: cybersecuritywithprivategpt-3f10-visualization-service
+       labels:
+         app: cybersecuritywithprivategpt-3f10-visualization-service
+     spec:
+       type: ClusterIP
+       ports:
+       - port: 80 # Ingress port, if using port 443 will need to setup TLS certs
+         name: p1
+         protocol: TCP
+         targetPort: 57263
+       selector:
+         app: cybersecuritywithprivategpt-3f10
 
 .. tip::
 
@@ -448,13 +568,13 @@ To visualize the dashboard you need to forward ports to your solution **deployme
 
 .. code-block::
 
-   --kube-portforward--
+   kubectl port-forward deployment/cybersecuritywithprivategpt-3f10 57263:57263
 
 After you forward the ports then copy/paste the viusalization URL below and run your dashboard.
 
 .. code-block::
 
-   --visualizationurl--
+   http://localhost:57263/tml-cisco-network-privategpt-monitor.html?topic=cisco-network-preprocess,cisco-network-privategpt&offset=-1&groupid=&rollbackoffset=400&topictype=prediction&append=0&secure=1
 
 Scaling with NGINX Ingress and Ingress Controller
 -------------------------------------
@@ -505,18 +625,49 @@ All TML solutions will scale with NGINX ingress to perform load-balancing.  But,
 
       minikube tunnel
 
-   **STEP 4:  Apply nginx-ingress---nginxname--.yml to your kubernetes cluster.  First you need to save it locally then apply it:**
+   **STEP 4:  Apply nginx-ingress-cybersecuritywithprivategpt-3f10.yml to your kubernetes cluster.  First you need to save it locally then apply it:**
 
-nginx-ingress---nginxname--.yml
+nginx-ingress-cybersecuritywithprivategpt-3f10.yml
 -------------
 
    .. code-block::
 
-      --ingress--
+      
+    ############# nginx-ingress-cybersecuritywithprivategpt-3f10.yml
+    apiVersion: networking.k8s.io/v1
+    kind: Ingress
+    metadata:
+      name: tml-ingress
+      annotations:
+        nginx.ingress.kubernetes.io/use-regex: "true"
+        nginx.ingress.kubernetes.io/rewrite-target: /$2
+    spec:
+      ingressClassName: nginx
+      rules:
+        - host: tml.tss
+          http:
+            paths:
+              - path: /viz(/|$)(.*)
+                pathType: ImplementationSpecific
+                backend:
+                  service:
+                    name: cybersecuritywithprivategpt-3f10-visualization-service
+                    port:
+                      number: 80
+    ---
+    apiVersion: v1
+    kind: ConfigMap
+    apiVersion: v1
+    metadata:
+      name: ingress-nginx-controller
+      namespace: ingress-nginx
+    data:
+      allow-snippet-annotations: "true"
+  
 
    .. code-block::
 
-      kubectl apply -f nginx-ingress---nginxname--.yml
+      kubectl apply -f nginx-ingress-cybersecuritywithprivategpt-3f10.yml
 
 You are now ready to run the Dashboard using Ingress load balancing.
 
@@ -527,7 +678,7 @@ Copy and paste this URL below in your browser and start streaming.  Because you 
 
 .. code-block::
 
-   --visualizationurling--
+   http://tml.tss/viz/tml-cisco-network-privategpt-monitor.html?topic=cisco-network-preprocess,cisco-network-privategpt&offset=-1&groupid=&rollbackoffset=400&topictype=prediction&append=0&secure=1
 
 Making Secure TLS Connection with gRPC
 -----------------------
